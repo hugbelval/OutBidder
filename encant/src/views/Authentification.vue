@@ -1,5 +1,19 @@
 <!-- eslint-disable -->
 <template>
+  <div class="home">
+    <img alt="Vue logo" src="../assets/logo.png" />
+    <HelloWorld msg="Welcome to Your Vue.js App" />
+
+    <!-- Check that the SDK client is not currently loading before accessing is methods -->
+    <div v-if="!$auth.loading">
+      <!-- show login when not authenticated -->
+      <button v-if="!$auth.isAuthenticated" @click="login">Log in</button>
+      <!-- show logout when authenticated -->
+      <button v-if="$auth.isAuthenticated" @click="logout">Log out</button>
+    </div>
+    <h1>Im alive</h1>
+  </div>
+<!--
     <div class="w-25 container">
         <div class="bg-warning p-5 rounded m-auto" id="box-form">
         <form>
@@ -21,6 +35,7 @@
         </div>
     </div>
     <router-link to="/connection">Connect</router-link>
+    -->
 </template>
 <script>/* eslint-disable */ 
 export default {
@@ -41,6 +56,15 @@ export default {
         onChange(){
             console.log("allo")
             //Validation avec la bd pour le nom
+        },
+        login() {
+            this.$auth.loginWithRedirect();
+        },
+        // Log the user out
+        logout() {
+            this.$auth.logout({
+            returnTo: window.location.origin
+            });
         }
     },
 }

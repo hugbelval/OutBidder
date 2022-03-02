@@ -2,7 +2,17 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 
+
 const app = express();
+
+const { auth } = require('express-oauth2-jwt-bearer');
+
+// Authorization middleware. When used, the Access Token must
+// exist and be verified against the Auth0 JSON Web Key Set.
+const checkJwt = auth({
+  audience: 'outbidderapi',
+  issuerBaseURL: `https://dev-yogzkx53.us.auth0.com/`,
+});
 
 // Middleware
 app.use(bodyParser.json());
@@ -13,7 +23,7 @@ app.use(cors());
 const posts = require('./routes/api/posts');
 const users = require('./routes/api/users');
 
-app.use('/users', users);
+app.use('/users', checkJwt, users);
 app.use('/encant', posts);
 
 // Handle production
